@@ -37,7 +37,7 @@ import org.apache.ibatis.transaction.Transaction;
  * @author Clinton Begin
  */
 public class ReuseExecutor extends BaseExecutor {
-
+	//重用Statement对象
   private final Map<String, Statement> statementMap = new HashMap<String, Statement>();
 
   public ReuseExecutor(Configuration configuration, Transaction transaction) {

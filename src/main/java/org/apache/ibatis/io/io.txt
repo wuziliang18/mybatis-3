@@ -1,0 +1,1 @@
+提供读取资源文件的API、封装MyBatis自身所需要的ClassLoader和加载顺序
