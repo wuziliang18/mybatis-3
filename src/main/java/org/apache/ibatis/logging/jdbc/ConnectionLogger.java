@@ -76,7 +76,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
 
   /*
    * Creates a logging version of a connection
-   *
+   * 生成一个带打印日志的 数据库连接代理
    * @param conn - the original connection
    * @return - the connection with logging
    */

@@ -27,7 +27,7 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * A {@link VFS} implementation that works with the VFS API provided by JBoss 6.
- * 
+ * wuzl 使用大量反射之类的 应该是防止没有依赖jar的时编译出错
  * @author Ben Gunter
  */
 public class JBoss6VFS extends VFS {

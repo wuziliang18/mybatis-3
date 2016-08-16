@@ -55,6 +55,7 @@ import org.apache.ibatis.logging.LogFactory;
  * </pre>
  *
  * @author Tim Fennell
+ * wuzl查找所有实现某类和加入某注解的类
  */
 public class ResolverUtil<T> {
   /*

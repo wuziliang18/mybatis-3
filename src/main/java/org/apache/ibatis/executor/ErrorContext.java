@@ -33,7 +33,10 @@ public class ErrorContext {
 
   private ErrorContext() {
   }
-
+  /**
+   * 每个线程单例
+   * @return
+   */
   public static ErrorContext instance() {
     ErrorContext context = LOCAL.get();
     if (context == null) {
@@ -42,13 +45,19 @@ public class ErrorContext {
     }
     return context;
   }
-
+  /**
+   * 保存当前对象为stored 并且重新创建后返回（缓存为线程单例）
+   * @return
+   */
   public ErrorContext store() {
     stored = this;
     LOCAL.set(new ErrorContext());
     return LOCAL.get();
   }
-
+  /**
+   * 找回之前保存的为当前线程单例
+   * @return
+   */
   public ErrorContext recall() {
     if (stored != null) {
       LOCAL.set(stored);

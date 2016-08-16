@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ * wuzl 不明白为什么非得用构造函数反射 不可以Log加个获取新的Log对象的方法吗 只需要反射一回
  */
 public final class LogFactory {
 
@@ -29,7 +30,9 @@ public final class LogFactory {
   public static final String MARKER = "MYBATIS";
 
   private static Constructor<? extends Log> logConstructor;
-
+  /**
+   * 尝试使用一个日志输出
+   */
   static {
     tryImplementation(new Runnable() {
       @Override

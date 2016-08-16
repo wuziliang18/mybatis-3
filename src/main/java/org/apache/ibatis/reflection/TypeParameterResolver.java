@@ -27,6 +27,7 @@ import java.util.Arrays;
 
 /**
  * @author Iwao AVE!
+ * wuzl解析泛型的工具类
  */
 public class TypeParameterResolver {
 
@@ -97,6 +98,7 @@ public class TypeParameterResolver {
     Class<?> rawType = (Class<?>) parameterizedType.getRawType();
     Type[] typeArgs = parameterizedType.getActualTypeArguments();
     Type[] args = new Type[typeArgs.length];
+    //循环解析所有泛型
     for (int i = 0; i < typeArgs.length; i++) {
       if (typeArgs[i] instanceof TypeVariable) {
         args[i] = resolveTypeVar((TypeVariable<?>) typeArgs[i], srcType, declaringClass);
@@ -104,10 +106,11 @@ public class TypeParameterResolver {
         args[i] = resolveParameterizedType((ParameterizedType) typeArgs[i], srcType, declaringClass);
       } else if (typeArgs[i] instanceof WildcardType) {
         args[i] = resolveWildcardType((WildcardType) typeArgs[i], srcType, declaringClass);
-      } else {
+      } else {//如果没有嵌套 泛型内直接是class
         args[i] = typeArgs[i];
       }
     }
+    //返回所有泛型
     return new ParameterizedTypeImpl(rawType, null, args);
   }
 
@@ -136,7 +139,7 @@ public class TypeParameterResolver {
   private static Type resolveTypeVar(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass) {
     Type result = null;
     Class<?> clazz = null;
-    if (srcType instanceof Class) {
+    if (srcType instanceof Class) {//如果传入了字段对象所在类 clazz是目标类
       clazz = (Class<?>) srcType;
     } else if (srcType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) srcType;
@@ -145,17 +148,17 @@ public class TypeParameterResolver {
       throw new IllegalArgumentException("The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
     }
 
-    if (clazz == declaringClass) {
+    if (clazz == declaringClass) {//如果字段在目标类内 无法分析泛型
       return Object.class;
     }
 
-    Type superclass = clazz.getGenericSuperclass();
+    Type superclass = clazz.getGenericSuperclass();//获取带泛型的父类 如果是接口可能为null
     result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superclass);
     if (result != null) {
       return result;
     }
 
-    Type[] superInterfaces = clazz.getGenericInterfaces();
+    Type[] superInterfaces = clazz.getGenericInterfaces();//获取带泛型的接口
     for (Type superInterface : superInterfaces) {
       result = scanSuperTypes(typeVar, srcType, declaringClass, clazz, superInterface);
       if (result != null) {
@@ -167,15 +170,16 @@ public class TypeParameterResolver {
 
   private static Type scanSuperTypes(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass, Class<?> clazz, Type superclass) {
     Type result = null;
+    //父类的type 应该是只可能是ParameterizedType或者class
     if (superclass instanceof ParameterizedType) {
       ParameterizedType parentAsType = (ParameterizedType) superclass;
-      Class<?> parentAsClass = (Class<?>) parentAsType.getRawType();
-      if (declaringClass == parentAsClass) {
-        Type[] typeArgs = parentAsType.getActualTypeArguments();
-        TypeVariable<?>[] declaredTypeVars = declaringClass.getTypeParameters();
+      Class<?> parentAsClass = (Class<?>) parentAsType.getRawType();//获取字段所在父类
+      if (declaringClass == parentAsClass) {//如果目标所在父类与字段所在类一致
+        Type[] typeArgs = parentAsType.getActualTypeArguments();//获取所有泛型的值数组如String 
+        TypeVariable<?>[] declaredTypeVars = declaringClass.getTypeParameters();//获取目标类的泛型名称数组 如T
         for (int i = 0; i < declaredTypeVars.length; i++) {
           if (declaredTypeVars[i] == typeVar) {
-            if (typeArgs[i] instanceof TypeVariable) {
+            if (typeArgs[i] instanceof TypeVariable) {//如果是嵌套的泛型
               TypeVariable<?>[] typeParams = clazz.getTypeParameters();
               for (int j = 0; j < typeParams.length; j++) {
                 if (typeParams[j] == typeArgs[i]) {
@@ -185,17 +189,17 @@ public class TypeParameterResolver {
                   break;
                 }
               }
-            } else {
+            } else {//正常是String之类的class 直接返回
               result = typeArgs[i];
             }
           }
         }
       } else if (declaringClass.isAssignableFrom(parentAsClass)) {
-        result = resolveTypeVar(typeVar, parentAsType, declaringClass);
+        result = resolveTypeVar(typeVar, parentAsType, declaringClass);//从目标类的父类中继续查找
       }
     } else if (superclass instanceof Class) {
       if (declaringClass.isAssignableFrom((Class<?>) superclass)) {
-        result = resolveTypeVar(typeVar, superclass, declaringClass);
+        result = resolveTypeVar(typeVar, superclass, declaringClass);//从目标类的父类中继续查找
       }
     }
     return result;

@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
+//使用MockitoJUnitRunner作为junit 的runner
 @RunWith(MockitoJUnitRunner.class)
 public class ResultSetLoggerTest {
 

@@ -121,7 +121,11 @@ public abstract class BaseJdbcLogger {
     columnNames.clear();
     columnValues.clear();
   }
-
+  /**
+   * 去除多余一个的空格
+   * @param original
+   * @return
+   */
   protected String removeBreakingWhitespace(String original) {
     StringTokenizer whitespaceStripper = new StringTokenizer(original);
     StringBuilder builder = new StringBuilder();

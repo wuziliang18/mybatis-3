@@ -64,6 +64,7 @@ public class DefaultVFS extends VFS {
         if (log.isDebugEnabled()) {
           log.debug("Listing " + url);
         }
+        //查找jar内的所有路径
         resources = listResources(new JarInputStream(is), path);
       }
       else {
