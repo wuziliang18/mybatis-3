@@ -31,7 +31,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  */
 public class BeanWrapper extends BaseWrapper {
 
-  private Object object;
+  private Object object;//实际的初始对象
   private MetaClass metaClass;
 
   public BeanWrapper(MetaObject metaObject, Object object) {
@@ -42,8 +42,8 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, object);
+    if (prop.getIndex() != null) {//有[]如 user[id] 或者users[0]
+      Object collection = resolveCollection(prop, object);//获取参数的集合对象
       return getCollectionValue(prop, collection);
     } else {
       return getBeanProperty(prop, object);

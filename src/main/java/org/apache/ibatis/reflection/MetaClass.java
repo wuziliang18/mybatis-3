@@ -42,12 +42,20 @@ public class MetaClass {
   public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
     return new MetaClass(type, reflectorFactory);
   }
-
+  /**
+   * 根据返回类型 生成一个MetaClass 方便递归查询
+   * @param name
+   * @return
+   */
   public MetaClass metaClassForProperty(String name) {
     Class<?> propType = reflector.getGetterType(name);
     return MetaClass.forClass(propType, reflectorFactory);
   }
-
+  /**
+   * 根据name不区分大小写的查找字段名称 如果是uSer.id之类的会递归
+   * @param name
+   * @return
+   */
   public String findProperty(String name) {
     StringBuilder prop = buildProperty(name, new StringBuilder());
     return prop.length() > 0 ? prop.toString() : null;
@@ -70,7 +78,7 @@ public class MetaClass {
 
   public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
+    if (prop.hasNext()) {//找出如user.id的类型
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.getSetterType(prop.getChildren());
     } else {
@@ -95,7 +103,7 @@ public class MetaClass {
 
   private Class<?> getGetterType(PropertyTokenizer prop) {
     Class<?> type = reflector.getGetterType(prop.getName());
-    if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
+    if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {//如果返回类型是数组 且获取中包含index
       Type returnType = getGenericGetterType(prop.getName());
       if (returnType instanceof ParameterizedType) {
         Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
@@ -111,7 +119,11 @@ public class MetaClass {
     }
     return type;
   }
-
+  /**
+   * 获取类型 如果是泛型解析
+   * @param propertyName
+   * @return
+   */
   private Type getGenericGetterType(String propertyName) {
     try {
       Invoker invoker = reflector.getGetInvoker(propertyName);
@@ -131,7 +143,11 @@ public class MetaClass {
     }
     return null;
   }
-
+  /**
+   * 递归判断是否有set方法 如 user.id 递归
+   * @param name
+   * @return
+   */
   public boolean hasSetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -167,15 +183,15 @@ public class MetaClass {
   public Invoker getSetInvoker(String name) {
     return reflector.getSetInvoker(name);
   }
-
+  
   private StringBuilder buildProperty(String name, StringBuilder builder) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
+    if (prop.hasNext()) {//如user.id
       String propertyName = reflector.findPropertyName(prop.getName());
       if (propertyName != null) {
         builder.append(propertyName);
         builder.append(".");
-        MetaClass metaProp = metaClassForProperty(propertyName);
+        MetaClass metaProp = metaClassForProperty(propertyName);//递归
         metaProp.buildProperty(prop.getChildren(), builder);
       }
     } else {

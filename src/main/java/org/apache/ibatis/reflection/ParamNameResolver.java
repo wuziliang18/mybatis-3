@@ -33,12 +33,12 @@ import org.apache.ibatis.session.RowBounds;
 public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
-  private static final String PARAMETER_CLASS = "java.lang.reflect.Parameter";
+	private static final String PARAMETER_CLASS = "java.lang.reflect.Parameter";
   private static Method GET_NAME = null;
   private static Method GET_PARAMS = null;
 
   static {
-    try {
+    try {//jdk8才有的
       Class<?> paramClass = Resources.classForName(PARAMETER_CLASS);
       GET_NAME = paramClass.getMethod("getName");
       GET_PARAMS = Method.class.getMethod("getParameters");
@@ -66,7 +66,7 @@ public class ParamNameResolver {
 
   public ParamNameResolver(Configuration config, Method method) {
     final Class<?>[] paramTypes = method.getParameterTypes();
-    final Annotation[][] paramAnnotations = method.getParameterAnnotations();
+    final Annotation[][] paramAnnotations = method.getParameterAnnotations();//获得参数注解 
     final SortedMap<Integer, String> map = new TreeMap<Integer, String>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations

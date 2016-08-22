@@ -60,8 +60,9 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
       Constructor<T> constructor;
       if (constructorArgTypes == null || constructorArgs == null) {
         constructor = type.getDeclaredConstructor();
+        //判断构造函数启用或禁用安全检查
         if (!constructor.isAccessible()) {
-          constructor.setAccessible(true);
+          constructor.setAccessible(true);//加快反射性能
         }
         return constructor.newInstance();
       }
@@ -70,7 +71,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
         constructor.setAccessible(true);
       }
       return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
-    } catch (Exception e) {
+    } catch (Exception e) {//重新组织抛出异常
       StringBuilder argTypes = new StringBuilder();
       if (constructorArgTypes != null && !constructorArgTypes.isEmpty()) {
         for (Class<?> argType : constructorArgTypes) {
@@ -90,7 +91,11 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
       throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
     }
   }
-
+  /**
+   * 解析类 如果类是一些公共接口的如list之类 返回一个通用的实现类 否则直接返回类
+   * @param type
+   * @return
+   */
   protected Class<?> resolveInterface(Class<?> type) {
     Class<?> classToCreate;
     if (type == List.class || type == Collection.class || type == Iterable.class) {

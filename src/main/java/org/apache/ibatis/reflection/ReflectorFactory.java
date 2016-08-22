@@ -14,7 +14,11 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.reflection;
-
+/**
+ * 类的反射工厂类
+ * @author wuzl
+ *
+ */
 public interface ReflectorFactory {
 
   boolean isClassCacheEnabled();

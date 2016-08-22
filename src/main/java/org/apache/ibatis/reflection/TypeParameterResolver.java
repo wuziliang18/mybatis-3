@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 /**
  * @author Iwao AVE!
- * wuzl解析泛型的工具类
+ * wuzl解析泛型的工具类 
  */
 public class TypeParameterResolver {
 

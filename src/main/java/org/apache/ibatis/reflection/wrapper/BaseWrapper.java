@@ -33,7 +33,12 @@ public abstract class BaseWrapper implements ObjectWrapper {
   protected BaseWrapper(MetaObject metaObject) {
     this.metaObject = metaObject;
   }
-
+  /**
+   * 获取参数的集合对象 list或者map之类
+   * @param prop
+   * @param object
+   * @return
+   */
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
     if ("".equals(prop.getName())) {
       return object;

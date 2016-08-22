@@ -57,7 +57,7 @@ public class Reflector {
   private Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
   private Constructor<?> defaultConstructor;
 
-  private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();
+  private Map<String, String> caseInsensitivePropertyMap = new HashMap<String, String>();//全部大写的字段名称 方便查找
 
   public Reflector(Class<?> clazz) {
     type = clazz;
@@ -118,9 +118,9 @@ public class Reflector {
       List<Method> getters = conflictingGetters.get(propName);
       Iterator<Method> iterator = getters.iterator();
       Method firstMethod = iterator.next();
-      if (getters.size() == 1) {
+      if (getters.size() == 1) {//只有一个get方法
         addGetMethod(propName, firstMethod);
-      } else {
+      } else {//如果有多个 需要查找最子类的get方法
         Method getter = firstMethod;
         Class<?> getterType = firstMethod.getReturnType();
         while (iterator.hasNext()) {
@@ -168,7 +168,13 @@ public class Reflector {
     }
     resolveSetterConflicts(conflictingSetters);
   }
-
+  /**
+   * ？wuzl 为什么一个参数名会有多个get或set方法
+   *  因为子类可能去重写父类的方法
+   * @param conflictingMethods
+   * @param name
+   * @param method
+   */
   private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
     List<Method> list = conflictingMethods.get(name);
     if (list == null) {
@@ -240,7 +246,10 @@ public class Reflector {
     }
     return result;
   }
-
+  /**
+   * 递归（父类）查找所有没有set（非final和static的）和get方法的字段
+   * @param clazz
+   */
   private void addFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (Field field : fields) {
@@ -286,7 +295,11 @@ public class Reflector {
       getTypes.put(field.getName(), typeToClass(fieldType));
     }
   }
-
+  /**
+   * 正常的参数名称
+   * @param name
+   * @return
+   */
   private boolean isValidPropertyName(String name) {
     return !(name.startsWith("$") || "serialVersionUID".equals(name) || "class".equals(name));
   }
@@ -323,7 +336,7 @@ public class Reflector {
 
   private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
     for (Method currentMethod : methods) {
-      if (!currentMethod.isBridge()) {
+      if (!currentMethod.isBridge()) {//排除泛型的干扰
         String signature = getSignature(currentMethod);
         // check to see if the method is already known
         // if it is known, then an extended class must have

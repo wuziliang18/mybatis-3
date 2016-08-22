@@ -22,8 +22,8 @@ import java.util.Iterator;
  */
 public class PropertyTokenizer implements Iterable<PropertyTokenizer>, Iterator<PropertyTokenizer> {
   private String name;
-  private String indexedName;
-  private String index;
+  private String indexedName;//如果是数组或者map就是这个数组或者map的名称
+  private String index;//数组的位置或者map的key
   private String children;
 
   public PropertyTokenizer(String fullname) {
