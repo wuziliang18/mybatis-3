@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author Clinton Begin
+ * 用来注册类型名称的 value是注册的名称 如String value为string
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

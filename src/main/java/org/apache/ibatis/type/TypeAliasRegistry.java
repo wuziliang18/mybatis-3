@@ -34,6 +34,7 @@ import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ * 注册类型别名
  */
 public class TypeAliasRegistry {
 
@@ -124,7 +125,11 @@ public class TypeAliasRegistry {
   public void registerAliases(String packageName){
     registerAliases(packageName, Object.class);
   }
-
+  /**
+   * 扫描包下所有superType的子类 注册
+   * @param packageName
+   * @param superType
+   */
   public void registerAliases(String packageName, Class<?> superType){
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);

@@ -23,10 +23,12 @@ import java.lang.annotation.Target;
 
 /**
  * @author Eduardo Macarron
+ * TypeHandler实现类上的注解表明支持的java类型
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MappedTypes {
+	//Intger.class Long.class之类
   Class<?>[] value();
 }

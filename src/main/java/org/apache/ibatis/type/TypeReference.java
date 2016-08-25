@@ -20,14 +20,14 @@ import java.lang.reflect.Type;
 
 /**
  * References a generic type.
- *
+ * 
  * @param <T> the referenced type
  * @since 3.1.0
  * @author Simone Tripodi
  */
 public abstract class TypeReference<T> {
 
-  private final Type rawType;
+  private final Type rawType;//泛型的真正类型
 
   protected TypeReference() {
     rawType = getSuperclassTypeParameter(getClass());

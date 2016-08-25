@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author Eduardo Macarron
+ * TypeHandler实现上的注解 表示支持jdbc的类型
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

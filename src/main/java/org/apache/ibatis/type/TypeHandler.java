@@ -24,7 +24,14 @@ import java.sql.SQLException;
  * @author Clinton Begin
  */
 public interface TypeHandler<T> {
-
+	/**
+	 * 设置请求参数
+	 * @param ps
+	 * @param i
+	 * @param parameter
+	 * @param jdbcType
+	 * @throws SQLException
+	 */
   void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
   T getResult(ResultSet rs, String columnName) throws SQLException;

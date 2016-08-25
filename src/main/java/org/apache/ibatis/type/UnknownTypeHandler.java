@@ -27,6 +27,7 @@ import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ * wuzl未知类型的处理 如果参数为空使用ObjectTypeHandler 否则尝试根据参数类型获取合适的handler
  */
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
