@@ -139,12 +139,18 @@ public abstract class AbstractSQL<T> {
   private SQLStatement sql() {
     return sql;
   }
-
+  /**
+   * 追加ｓｑｌ后返回
+   * @param a
+   * @return
+   */
   public <A extends Appendable> A usingAppender(A a) {
     sql().sql(a);
     return a;
   }
-
+  /**
+   * 生成sql后返回
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -187,8 +193,8 @@ public abstract class AbstractSQL<T> {
 
     StatementType statementType;
     List<String> sets = new ArrayList<String>();
-    List<String> select = new ArrayList<String>();
-    List<String> tables = new ArrayList<String>();
+    List<String> select = new ArrayList<String>();//查询字段集合
+    List<String> tables = new ArrayList<String>();//操作表的集合
     List<String> join = new ArrayList<String>();
     List<String> innerJoin = new ArrayList<String>();
     List<String> outerJoin = new ArrayList<String>();
@@ -198,7 +204,7 @@ public abstract class AbstractSQL<T> {
     List<String> having = new ArrayList<String>();
     List<String> groupBy = new ArrayList<String>();
     List<String> orderBy = new ArrayList<String>();
-    List<String> lastList = new ArrayList<String>();
+    List<String> lastList = new ArrayList<String>();//wuzl似乎没用 
     List<String> columns = new ArrayList<String>();
     List<String> values = new ArrayList<String>();
     boolean distinct;
@@ -206,7 +212,15 @@ public abstract class AbstractSQL<T> {
     public SQLStatement() {
         // Prevent Synthetic Access
     }
-
+    /**
+     * 拼接sql
+     * @param builder 拼接串
+     * @param keyword 关键字
+     * @param parts   组合的数组
+     * @param open    拼接parts前的开头
+     * @param close   拼接parts的结尾
+     * @param conjunction  parts拼接中的连接符
+     */
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
                            String conjunction) {
       if (!parts.isEmpty()) {
