@@ -202,7 +202,10 @@ public class UnpooledDataSource implements DataSource {
     configureConnection(connection);
     return connection;
   }
-
+  /**
+   * 初始化数据库驱动
+   * @throws SQLException
+   */
   private synchronized void initializeDriver() throws SQLException {
     if (!registeredDrivers.containsKey(driver)) {
       Class<?> driverType;
@@ -222,7 +225,11 @@ public class UnpooledDataSource implements DataSource {
       }
     }
   }
-
+  /**
+   * 配置连接的自动提交和事务级别
+   * @param conn
+   * @throws SQLException
+   */
   private void configureConnection(Connection conn) throws SQLException {
     if (autoCommit != null && autoCommit != conn.getAutoCommit()) {
       conn.setAutoCommit(autoCommit);

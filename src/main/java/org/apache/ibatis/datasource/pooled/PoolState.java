@@ -28,11 +28,11 @@ public class PoolState {
   protected final List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
   protected final List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
   protected long requestCount = 0;
-  protected long accumulatedRequestTime = 0;
+  protected long accumulatedRequestTime = 0;//累计请求时间
   protected long accumulatedCheckoutTime = 0;
-  protected long claimedOverdueConnectionCount = 0;
-  protected long accumulatedCheckoutTimeOfOverdueConnections = 0;
-  protected long accumulatedWaitTime = 0;
+  protected long claimedOverdueConnectionCount = 0;//连接池紧张的时候 连接超时的总数
+  protected long accumulatedCheckoutTimeOfOverdueConnections = 0;//连接池紧张的时候 连接超时的时候连接使用时间总数
+  protected long accumulatedWaitTime = 0;//累计等待时间
   protected long hadToWaitCount = 0;
   protected long badConnectionCount = 0;
 

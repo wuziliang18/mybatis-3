@@ -35,7 +35,7 @@ class PooledConnection implements InvocationHandler {
   private PooledDataSource dataSource;
   private Connection realConnection;
   private Connection proxyConnection;
-  private long checkoutTimestamp;
+  private long checkoutTimestamp;//最新获取的时间
   private long createdTimestamp;
   private long lastUsedTimestamp;
   private int connectionTypeCode;
@@ -228,6 +228,8 @@ class PooledConnection implements InvocationHandler {
    * @param method - the method to be executed
    * @param args   - the parameters to be passed to the method
    * @see java.lang.reflect.InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])
+   * 当关闭连接的时候 返还给线程池
+   * 其他任意方法都在判断连接可用后(保证每个连接只使用一次) 直接调用被代理的方法
    */
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
