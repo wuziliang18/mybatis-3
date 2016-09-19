@@ -33,8 +33,8 @@ public class XNode {
 
   private Node node;
   private String name;
-  private String body;
-  private Properties attributes;
+  private String body;//节点或者子节点中的内容text(替代符可以解析的话会解析)
+  private Properties attributes;//节点中的参数
   private Properties variables;
   private XPathParser xpathParser;
 
@@ -346,7 +346,11 @@ public class XNode {
     builder.append("\n");
     return builder.toString();
   }
-
+  /**
+   * 解析节点的所有参数 对替代符进行替换
+   * @param n
+   * @return
+   */
   private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();
@@ -359,7 +363,11 @@ public class XNode {
     }
     return attributes;
   }
-
+  /**
+   * 解析节点的内容 递归到所有子节点直到找到不空的内容为止
+   * @param node
+   * @return
+   */
   private String parseBody(Node node) {
     String data = getBodyData(node);
     if (data == null) {
@@ -374,7 +382,11 @@ public class XNode {
     }
     return data;
   }
-
+  /**
+   * 获取并解析节点内容 对替代符进行替换
+   * @param child
+   * @return
+   */
   private String getBodyData(Node child) {
     if (child.getNodeType() == Node.CDATA_SECTION_NODE
         || child.getNodeType() == Node.TEXT_NODE) {
