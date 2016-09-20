@@ -48,12 +48,12 @@ public final class MappedStatement {
   private boolean useCache;
   private boolean resultOrdered;
   private SqlCommandType sqlCommandType;
-  private KeyGenerator keyGenerator;
-  private String[] keyProperties;
+  private KeyGenerator keyGenerator;//key生成器
+  private String[] keyProperties;//主键
   private String[] keyColumns;
   private boolean hasNestedResultMaps;
   private String databaseId;
-  private Log statementLog;
+  private Log statementLog;//log
   private LanguageDriver lang;
   private String[] resultSets;
 

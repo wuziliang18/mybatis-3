@@ -29,8 +29,8 @@ public class ParameterMapping {
 
   private Configuration configuration;
 
-  private String property;
-  private ParameterMode mode;
+  private String property;//字段名称
+  private ParameterMode mode;//区分入参,出参,两用
   private Class<?> javaType = Object.class;
   private JdbcType jdbcType;
   private Integer numericScale;
@@ -106,7 +106,7 @@ public class ParameterMapping {
     }
 
     private void validate() {
-      if (ResultSet.class.equals(parameterMapping.javaType)) {
+      if (ResultSet.class.equals(parameterMapping.javaType)) {//如果参数值是ResultSet 一定要有resultMapId
         if (parameterMapping.resultMapId == null) { 
           throw new IllegalStateException("Missing resultmap in property '"  
               + parameterMapping.property + "'.  " 
@@ -120,7 +120,9 @@ public class ParameterMapping {
         }
       }
     }
-
+    /**
+     * 如果没有TypeHandler 但是又javaType 根据TypeHandlerRegistry获取TypeHandler
+     */
     private void resolveTypeHandler() {
       if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
         Configuration configuration = parameterMapping.configuration;

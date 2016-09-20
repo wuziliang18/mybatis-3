@@ -35,11 +35,12 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 
 /**
  * @author Clinton Begin
+ * cache的构造
  */
 public class CacheBuilder {
   private String id;
-  private Class<? extends Cache> implementation;
-  private List<Class<? extends Cache>> decorators;
+  private Class<? extends Cache> implementation;//缓存的具体实现要求构造函数必须是字符串类型的 没有的话使用map的
+  private List<Class<? extends Cache>> decorators;//缓存的包装器 如策略之类
   private Integer size;
   private Long clearInterval;
   private boolean readWrite;
@@ -93,7 +94,7 @@ public class CacheBuilder {
     Cache cache = newBaseCacheInstance(implementation, id);
     setCacheProperties(cache);
     // issue #352, do not apply decorators to custom caches
-    if (PerpetualCache.class.equals(cache.getClass())) {
+    if (PerpetualCache.class.equals(cache.getClass())) {//如果是最基本的map类型的cache会蹭蹭包装
       for (Class<? extends Cache> decorator : decorators) {
         cache = newCacheDecoratorInstance(decorator, cache);
         setCacheProperties(cache);
@@ -104,7 +105,9 @@ public class CacheBuilder {
     }
     return cache;
   }
-
+  /**
+   * 设置默认的缓存实现 和缓存策略
+   */
   private void setDefaultImplementations() {
     if (implementation == null) {
       implementation = PerpetualCache.class;
@@ -113,7 +116,11 @@ public class CacheBuilder {
       }
     }
   }
-
+  /**
+   * 根据参数对cache再次层层包装
+   * @param cache
+   * @return
+   */
   private Cache setStandardDecorators(Cache cache) {
     try {
       MetaObject metaCache = SystemMetaObject.forObject(cache);
@@ -137,7 +144,10 @@ public class CacheBuilder {
       throw new CacheException("Error building standard cache decorators.  Cause: " + e, e);
     }
   }
-
+  /**
+   * 给cache实现配置些可能的参数
+   * @param cache
+   */
   private void setCacheProperties(Cache cache) {
     if (properties != null) {
       MetaObject metaCache = SystemMetaObject.forObject(cache);
@@ -176,7 +186,12 @@ public class CacheBuilder {
       }
     }
   }
-
+  /**
+   * 反射出cache对象
+   * @param cacheClass
+   * @param id
+   * @return
+   */
   private Cache newBaseCacheInstance(Class<? extends Cache> cacheClass, String id) {
     Constructor<? extends Cache> cacheConstructor = getBaseCacheConstructor(cacheClass);
     try {
@@ -194,7 +209,12 @@ public class CacheBuilder {
           "Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: " + e, e);
     }
   }
-
+  /**
+   * 反射包装的cache类（层层包装）
+   * @param cacheClass
+   * @param base
+   * @return
+   */
   private Cache newCacheDecoratorInstance(Class<? extends Cache> cacheClass, Cache base) {
     Constructor<? extends Cache> cacheConstructor = getCacheDecoratorConstructor(cacheClass);
     try {

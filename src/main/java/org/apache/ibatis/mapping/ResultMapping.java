@@ -32,7 +32,7 @@ public class ResultMapping {
 
   private Configuration configuration;
   private String property;
-  private String column;
+  private String column;//字段结合 逗号分割
   private Class<?> javaType;
   private JdbcType jdbcType;
   private TypeHandler<?> typeHandler;
@@ -43,7 +43,7 @@ public class ResultMapping {
   private List<ResultFlag> flags;
   private List<ResultMapping> composites;
   private String resultSet;
-  private String foreignColumn;
+  private String foreignColumn;//外部字段集合 逗号分割
   private boolean lazy;
 
   ResultMapping() {
