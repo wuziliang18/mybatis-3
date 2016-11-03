@@ -92,6 +92,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
+ * 相当于有容器的功能
  */
 public class Configuration {
 

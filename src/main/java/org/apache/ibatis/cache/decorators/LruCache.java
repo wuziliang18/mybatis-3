@@ -28,8 +28,8 @@ import org.apache.ibatis.cache.Cache;
  */
 public class LruCache implements Cache {
 
-  private final Cache delegate;
-  private Map<Object, Object> keyMap;
+  private final Cache delegate;//实际的cache
+  private Map<Object, Object> keyMap;//链表map 保存key  不使用链表 是为了使用lru
   private Object eldestKey;
 
   public LruCache(Cache delegate) {
@@ -46,11 +46,14 @@ public class LruCache implements Cache {
   public int getSize() {
     return delegate.getSize();
   }
-
+  /**
+   * 初始化一个链表map
+   * @param size
+   */
   public void setSize(final int size) {
     keyMap = new LinkedHashMap<Object, Object>(size, .75F, true) {
       private static final long serialVersionUID = 4267176411845948333L;
-
+      //重写removeEldestEntry方法 来删除最老的数据
       @Override
       protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
         boolean tooBig = size() > size;
@@ -70,12 +73,13 @@ public class LruCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
-    keyMap.get(key); //touch
+    keyMap.get(key); //touch 刷新key的调用为了使这个key为最新
     return delegate.getObject(key);
   }
 
   @Override
   public Object removeObject(Object key) {
+	//wuzl?为什么这里不移除key的map
     return delegate.removeObject(key);
   }
 
@@ -93,7 +97,7 @@ public class LruCache implements Cache {
   private void cycleKeyList(Object key) {
     keyMap.put(key, key);
     if (eldestKey != null) {
-      delegate.removeObject(eldestKey);
+      delegate.removeObject(eldestKey);//超出限制删除最久缓存数据
       eldestKey = null;
     }
   }

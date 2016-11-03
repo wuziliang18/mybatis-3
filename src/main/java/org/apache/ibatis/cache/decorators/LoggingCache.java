@@ -23,6 +23,7 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * @author Clinton Begin
+ * 打印日志的cache包装
  */
 public class LoggingCache implements Cache {
 

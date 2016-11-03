@@ -21,6 +21,7 @@ import org.apache.ibatis.cache.Cache;
 
 /**
  * @author Clinton Begin
+ * 加锁的包装类
  */
 public class SynchronizedCache implements Cache {
 

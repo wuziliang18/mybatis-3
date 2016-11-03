@@ -24,6 +24,7 @@ import org.apache.ibatis.cache.CacheException;
 
 /**
  * @author Clinton Begin
+ * 最简单的缓存 使用map
  */
 public class PerpetualCache implements Cache {
 
@@ -69,7 +70,9 @@ public class PerpetualCache implements Cache {
   public ReadWriteLock getReadWriteLock() {
     return null;
   }
-
+  /**
+   * 重写equals方法 id相同就可以
+   */
   @Override
   public boolean equals(Object o) {
     if (getId() == null) {

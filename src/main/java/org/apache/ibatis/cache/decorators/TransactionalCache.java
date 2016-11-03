@@ -42,7 +42,7 @@ public class TransactionalCache implements Cache {
 
   private Cache delegate;
   private boolean clearOnCommit;
-  private Map<Object, Object> entriesToAddOnCommit;
+  private Map<Object, Object> entriesToAddOnCommit;//缓存
   private Set<Object> entriesMissedInCache;
 
   public TransactionalCache(Cache delegate) {

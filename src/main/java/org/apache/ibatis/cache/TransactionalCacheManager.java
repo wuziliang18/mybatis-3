@@ -22,6 +22,7 @@ import org.apache.ibatis.cache.decorators.TransactionalCache;
 
 /**
  * @author Clinton Begin
+ * 控制事务缓存的管理类
  */
 public class TransactionalCacheManager {
 

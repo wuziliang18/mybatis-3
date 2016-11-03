@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * 生成缓存的key使得每个查询hashcode唯一
  */
 public class CacheKey implements Cloneable, Serializable {
 
@@ -32,9 +33,9 @@ public class CacheKey implements Cloneable, Serializable {
   private static final int DEFAULT_MULTIPLYER = 37;
   private static final int DEFAULT_HASHCODE = 17;
 
-  private int multiplier;
-  private int hashcode;
-  private long checksum;
+  private int multiplier;//hashcode算法里的乘数
+  private int hashcode;//新增的时候会根据算法累加到hashcode
+  private long checksum;//累加所有增加对象的hashcode 可能是怕hashcode越界
   private int count;
   private List<Object> updateList;
 
