@@ -47,7 +47,11 @@ public class ParameterExpression extends HashMap<String, String> {
       property(expression, p);
     }
   }
-
+  /**
+  * 解析表达式 找到当前(对应的)中间的内容
+   * @param expression
+   * @param left
+   */
   private void expression(String expression, int left) {
     int match = 1;
     int right = left + 1;
@@ -62,7 +66,11 @@ public class ParameterExpression extends HashMap<String, String> {
     put("expression", expression.substring(left, right - 1));
     jdbcTypeOpt(expression, right);
   }
-
+  /**
+   * 解析键值对
+   * @param expression
+   * @param left
+   */
   private void property(String expression, int left) {
     if (left < expression.length()) {
       int right = skipUntil(expression, left, ",:");
@@ -70,7 +78,12 @@ public class ParameterExpression extends HashMap<String, String> {
       jdbcTypeOpt(expression, right);
     }
   }
-
+  /**
+   * 跳过空白字符之类
+   * @param expression
+   * @param p
+   * @return
+   */
   private int skipWS(String expression, int p) {
     for (int i = p; i < expression.length(); i++) {
       if (expression.charAt(i) > 0x20) {
